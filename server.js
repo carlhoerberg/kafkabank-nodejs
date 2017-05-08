@@ -35,7 +35,7 @@ app.get('/balance/:account', function (req, res) {
   var data = { balance: balance[a] };
   res.json(data);
 });
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 
 process.on('SIGINT', function() {
   console.log("Caught interrupt signal");
