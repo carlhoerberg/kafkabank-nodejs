@@ -35,6 +35,9 @@ consumer
     console.log(err);
     process.exit(1);
   })
+  .on('event', function(e) {
+    console.log(e);
+  })
   .on('data', function(data) {
     var msg = JSON.parse(data.value);
     if (!balance[msg.sender]) balance[msg.sender] = 0;
