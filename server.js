@@ -28,8 +28,12 @@ var consumer = new Kafka.KafkaConsumer(kafkaConf, {
 
 consumer
   .on('ready', function() {
-    consumer.subscribe([process.env.CLOUDKARAFKA_TOPIC_PREFIX + 'transactions']);
+    consumer.subscribe(topics);
     consumer.consume();
+  })
+  .on('error', function(err) {
+    console.log(err);
+    process.exit(1);
   })
   .on('data', function(data) {
     var msg = JSON.parse(data.value);
