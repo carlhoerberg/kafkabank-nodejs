@@ -1,19 +1,34 @@
 var balance = {};
 
+var fs = require('fs');
 var Kafka = require('node-rdkafka');
 
-var consumer = new Kafka.KafkaConsumer({
+var kafkaConf = {
   'group.id': 'kafkabank-nodejs',
   'metadata.broker.list': 'localhost:9092',
   'socket.keepalive.enable': true,
   'enable.auto.commit': false,
-}, {
+};
+
+var topics = ["transactions"];
+if (process.env.CLOUDKARAFKA_TOPIC_PREFIX) {
+  topics = topics.map(function(t) { return process.env.CLOUDKARAFKA_TOPIC_PREFIX + t; });
+  fs.writeFile("/tmp/kafka.ca", process.env.CLOUDKARAFKA_CA);
+  fs.writeFile("/tmp/kafka.crt", process.env.CLOUDKARAFKA_CERT);
+  fs.writeFile("/tmp/kafka.key", process.env.CLOUDKARAFKA_PRIVATE_KEY);
+  kafkaConf["ssl.ca.location"] = "/tmp/kafka.ca";
+  kafkaConf["ssl.certificate.location"] = "/tmp/kafka.crt";
+  kafkaConf["ssl.key.location"] = "/tmp/kafka.key";
+  kafkaConf["security.protocol"] = "ssl";
+}
+
+var consumer = new Kafka.KafkaConsumer(kafkaConf, {
   'auto.offset.reset': 'beginning'
 });
 
 consumer
   .on('ready', function() {
-    consumer.subscribe(['transactions']);
+    consumer.subscribe([process.env.CLOUDKARAFKA_TOPIC_PREFIX + 'transactions']);
     consumer.consume();
   })
   .on('data', function(data) {
