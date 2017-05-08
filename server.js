@@ -20,6 +20,7 @@ if (process.env.CLOUDKARAFKA_TOPIC_PREFIX) {
   kafkaConf["ssl.certificate.location"] = "/tmp/kafka.crt";
   kafkaConf["ssl.key.location"] = "/tmp/kafka.key";
   kafkaConf["security.protocol"] = "ssl";
+  kafkaConf["metadata.broker.list"] = process.env.CLOUDKARAFKA_BROKERS.split(",");
 }
 
 var consumer = new Kafka.KafkaConsumer(kafkaConf, {
