@@ -13,9 +13,9 @@ var kafkaConf = {
 var topics = ["transactions"];
 if (process.env.CLOUDKARAFKA_TOPIC_PREFIX) {
   topics = topics.map(function(t) { return process.env.CLOUDKARAFKA_TOPIC_PREFIX + t; });
-  fs.writeFile("/tmp/kafka.ca", process.env.CLOUDKARAFKA_CA);
-  fs.writeFile("/tmp/kafka.crt", process.env.CLOUDKARAFKA_CERT);
-  fs.writeFile("/tmp/kafka.key", process.env.CLOUDKARAFKA_PRIVATE_KEY);
+  fs.writeFileSync("/tmp/kafka.ca", process.env.CLOUDKARAFKA_CA);
+  fs.writeFileSync("/tmp/kafka.crt", process.env.CLOUDKARAFKA_CERT);
+  fs.writeFileSync("/tmp/kafka.key", process.env.CLOUDKARAFKA_PRIVATE_KEY);
   kafkaConf["ssl.ca.location"] = "/tmp/kafka.ca";
   kafkaConf["ssl.certificate.location"] = "/tmp/kafka.crt";
   kafkaConf["ssl.key.location"] = "/tmp/kafka.key";
